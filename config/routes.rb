@@ -6,4 +6,6 @@ TwitterReminder::Application.routes.draw do
 
   root :to => 'high_voltage/pages#show', :id => 'welcome'
 
+  require 'sidekiq/web'
+  mount Sidekiq::Web, at: '/sidekiq'
 end
