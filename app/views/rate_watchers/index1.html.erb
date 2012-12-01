@@ -1,0 +1,26 @@
+<div class="well">
+<%= @result%>
+</div>
+<h1>Listing rate_watchers</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @rate_watchers.each do |rate_watcher| %>
+  <tr>
+    <td><%= rate_watcher.user %></td>
+    <td><%= link_to 'Show', rate_watcher %></td>
+    <td><%= link_to 'Edit', edit_rate_watcher_path(rate_watcher) %></td>
+    <td><%= link_to 'Destroy', rate_watcher, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Rate watcher', new_rate_watcher_path %>
