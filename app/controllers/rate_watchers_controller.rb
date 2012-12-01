@@ -5,8 +5,8 @@ class RateWatchersController < ApplicationController
     require 'open-uri'
     require 'json'
 
-    url = "https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=yomimaid&count=100"
-    @results = JSON.parse(open(url).read)
+    url = "https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=yomimaid&count=1000"
+    @results = JSON.parse(open(url).read).reverse
 
     @results.each do |result|
       current_user.tweets.where({created_at: Time.parse(result['created_at']), twitter_id: result['id']}).first_or_create
