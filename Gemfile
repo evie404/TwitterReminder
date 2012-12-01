@@ -22,6 +22,7 @@ end
 
 gem 'jquery-rails'
 gem 'devise'
+gem 'omniauth-twitter'
 
 gem "seo_helper", "~> 1.0"
 gem "open_graph_helper"
@@ -55,6 +56,7 @@ group :development do
   gem "powder"
   gem "pry-nav"
   gem "pry-remote"
+  gem 'quiet_assets'
 end
 
 group :production do
