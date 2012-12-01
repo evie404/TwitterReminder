@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121201211817) do
+ActiveRecord::Schema.define(:version => 20121201234258) do
 
   create_table "rate_watchers", :force => true do |t|
     t.integer  "user_id"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(:version => 20121201211817) do
   add_index "tweets", ["user_id"], :name => "index_tweets_on_user_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "", :null => false
+    t.string   "email",                  :default => ""
     t.string   "encrypted_password",     :default => "", :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"

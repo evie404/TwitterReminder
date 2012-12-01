@@ -7,16 +7,30 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
-  attr_accessible :provider, :uid
+  attr_accessible :provider, :uid, :username
+  after_create :update_tweets
   # attr_accessible :title, :body
 
   has_many :tweets
+
+  def update_tweets(limit = 10)
+    require 'open-uri'
+    require 'json'
+
+    url = "https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=#{self.username}&count=#{limit}"
+    @results = JSON.parse(open(url).read).reverse
+
+    @results.each do |result|
+      self.tweets.where({created_at: Time.parse(result['created_at']), twitter_id: result['id']}).first_or_create
+    end
+  end
 
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
       user.provider = auth.provider
       user.uid = auth.uid
       user.username = auth.info.nickname
+      user.email  = nil if !auth.email && !auth.email_address
     end
   end
 
