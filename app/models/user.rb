@@ -13,15 +13,28 @@ class User < ActiveRecord::Base
 
   has_many :tweets
 
-  def update_tweets(limit = 1000)
+  def update_tweets(limit = 200)
     require 'open-uri'
     require 'json'
 
-    url = "https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=#{self.username}&count=#{limit}"
+    if self.last_tweet_id
+      url = "https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=#{self.username}&count=#{limit}&since_id=#{self.last_tweet_id}"
+    else
+      url = "https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=#{self.username}&count=200"
+    end
+    
     @results = JSON.parse(open(url).read).reverse
 
+    @last_tweet
+
     @results.each do |result|
-      self.tweets.where({created_at: Time.parse(result['created_at']), twitter_id: result['id']}).first_or_create
+      @last_tweet = self.tweets.where({created_at: Time.parse(result['created_at']), twitter_id: result['id']}).first_or_create
+    end
+
+    #@results.last['']
+    if @last_tweet
+      self.last_tweet_id = @last_tweet.twitter_id
+      self.save
     end
   end
 

@@ -4,11 +4,7 @@ class TweetCheckerWorker
     
   def perform
     User.all.each do |user|
-      if user.tweets.count == 0
-        user.update_tweets(200)
-      else
-        user.update_tweets(50)
-      end
+      user.update_tweets
     end
 
     self.class.perform_in(5.minutes)
