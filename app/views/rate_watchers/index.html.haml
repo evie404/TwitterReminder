@@ -1,5 +1,52 @@
-- @results.each do |result|
-  = result
+.span12
+
+  <script src="http://code.shutterstock.com/rickshaw/vendor/d3.v2.js"></script>
+  <script src="http://code.shutterstock.com/rickshaw/rickshaw.js"></script>
+  <script>var data_array = [
+  - first_done = false
+  - User.find(3).tweets.select('COUNT(id), HOUR(created_at), DAY(created_at), MONTH(created_at), YEAR(created_at)').group('HOUR(created_at)').order('created_at DESC').each do |tweet| #.group_by(&:created_at).each do |day, tweets|
+    / = "#{day} -> #{tweets[0]["COUNT(id)"]}"
+    /= "#{tweet["MONTH(created_at)"]}/#{tweet["DAY(created_at)"]} #{tweet["HOUR(created_at)"]}:00 : #{tweet["COUNT(id)"]}"
+    - if first_done
+      = ","
+    - else
+      - first_done = true
+    = "{x: #{Time.parse("#{tweet['YEAR(created_at)']}-#{tweet['MONTH(created_at)']}-#{tweet['DAY(created_at)']} #{tweet['HOUR(created_at)']}:00").to_i}, y: #{tweet["COUNT(id)"]}}"
+  ];</script>
   %br
-  = Time.parse(result['created_at'])
-  %hr
+  #chart
+
+  :javascript
+    var graph = new Rickshaw.Graph( {
+      element: document.getElementById("chart"),
+      width: 960,
+      height: 500,
+      //renderer: 'area',
+      //stroke: true,
+      series: [
+        {
+          color: "#c05020",
+          data: data_array,
+          name: 'New York'
+        }
+      ]
+    } );
+
+    graph.render();
+
+    var xAxis = new Rickshaw.Graph.Axis.Time( {
+      graph: graph,
+      ticksTreatment: ticksTreatment
+    } );
+
+    xAxis.render();
+
+    var yAxis = new Rickshaw.Graph.Axis.Y( {
+      graph: graph,
+      tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+      ticksTreatment: ticksTreatment
+    } );
+
+    yAxis.render();
+
+
